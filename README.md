@@ -1,3 +1,6 @@
+# Credential_Truth
+## (A.K.A. docker-credential-truth)
+
 This is a package that produces a command-line utility which can act as a
 [Docker Credential Helper]. It is intended to be used only with Linux,
 as it depends on the [pass] command-line utility for storing secrets.
@@ -25,7 +28,7 @@ and it will never appear to interact or collide with *credential_truth*.
 To help simplify things further, it also provides a utility for initialising
 this authentication system on a per-user basis.
 
-# Installation
+## Installation
 
 After compilation, the resultant binary should be renamed to
 `docker-credential-truth` and added to the path. This is so Docker accepts it
@@ -36,7 +39,7 @@ to change your secrets location. If you're going to do this, do it
 **before** you run `init`, and be aware that this will mean your
 secrets are no longer stored under the same structure as everyone else.
 
-# Usage
+## Usage
 
 To get set up, first **make sure** you're logged in as the user you wish to
 authenticate (here I'm logging in as `root`). This step is essential.
