@@ -1,8 +1,7 @@
 name: rustdoc
 on:
-  push:
-   branches:
-   - master
+  release:
+    types: [publish]
 
 env:
   CARGO_INCREMENTAL: 0
@@ -17,6 +16,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        ref: ${{ github.ref }}
 
     - name: Install Rust toolchain
       uses: actions-rs/toolchain@v1
