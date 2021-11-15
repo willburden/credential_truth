@@ -1,0 +1,31 @@
+name: Rustdoc
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish_rustdoc:
+    runs-on:
+      ubuntu-latest
+    steps:
+      - name: Checkout Release
+        uses: actions/checkout@v2.4.0
+        with:
+          ref: ${GITHUB_REF}
+    
+      - name: Acquire Rust toolchain
+        uses: actions-rs/toolchain@v1.0.6
+      
+      - name: Build Rustdoc
+        run: cargo rustdoc --release --lib --no-deps
+      
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./target/doc
+          force_orphan: true
