@@ -1,4 +1,4 @@
-# Credential_Truth
+# credential_truth
 ## (A.K.A. docker-credential-truth)
 
 *credential_truth* is a package that produces a program, *docker-credential-truth*
