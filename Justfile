@@ -1,8 +1,8 @@
 # cargo install just
 # More info: https://github.com/casey/just
 
+# Set *default* profile. Use environment variable to override per-run.
 profile := "debug"
-# profile := "release"
 
 # Shouldn't be overridden.
 _profile_flag := if profile == "release" {"--release"} else {""}
