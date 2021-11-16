@@ -6,10 +6,7 @@ which can act as a [Docker Credential Helper]. It is intended to be
 used only with Linux, as it depends on the [pass] command-line
 utility for storing secrets.
 
-> Note: this package is still a pre-release; anything may change at
-> any time. The API should not be considered stable.
-> Furthermore, most of the functionality outlined below is
-> not-yet-implemented.
+> Note: most of the functionality outlined below is not-yet-implemented.
 
 This program is intended as a replacement for the somewhat broken
 [docker-credential-pass] credential helper provided by Docker;

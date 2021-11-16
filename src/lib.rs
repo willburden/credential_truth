@@ -1,4 +1,13 @@
-#![doc = include_str!("../README.md")]
+//! ### A.K.A docker-credential-truth
+//! 
+//! *credential_truth* is a package that compiles to a program, *docker-credential-truth*
+//! which can act as a Docker Credential Helper. To find out more about what
+//! this is, visit the [Github repo]. Health warning: it's not particularly interesting.
+//!
+//! **Note:** this documentation is provided purely to aid development. It does not imply
+//! that the library crate is intended to be used by any other crate.
+//! 
+//! [Github repo]: https://github.com/willburden/credential_truth
 
 #![deny(clippy::missing_docs_in_private_items)]
 #![forbid(unsafe_code)]
