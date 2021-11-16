@@ -5,12 +5,6 @@
 
 /// Converts a string slice of the format "{author1}:{author2}:..."
 /// to the format "{author1}, {author2}, ...".
-/// 
-/// # Example
-/// 
-/// ```ignore
-/// assert_eq!(authors("Alice:Bob"), "Alice, Bob");
-/// ```
 pub fn authors(raw: &str) -> String {
     raw.replace(':', ", ")
 }

@@ -1,11 +1,8 @@
 //! ### A.K.A docker-credential-truth
 //! 
-//! *credential_truth* is a package that compiles to a program, *docker-credential-truth*
+//! *credential_truth* is a package that compiles to a program, *docker-credential-truth*,
 //! which can act as a Docker Credential Helper. To find out more about what
 //! this is, visit the [Github repo]. Health warning: it's not particularly interesting.
-//!
-//! **Note:** this documentation is provided purely to aid development. It does not imply
-//! that the library crate is intended to be used by any other crate.
 //! 
 //! [Github repo]: https://github.com/willburden/credential_truth
 
@@ -13,23 +10,37 @@
 #![forbid(unsafe_code)]
 
 use clap::{App, AppSettings, SubCommand, Arg, ArgMatches};
+use simple_logger::SimpleLogger;
 
 mod util;
 use util::authors;
 
-/// Called whenever the program is run.
-/// Reads the user's input, and outputs an
-/// appropriate response.
+/// Entrypoint function, called whenever the program is run.
+/// 
+/// Reads the user's input, and outputs an appropriate response.
 pub fn run() {
-    match_app();
+    // Safe to unwrap as init only errors if another logger is already set.
+    SimpleLogger::new().init().unwrap();
+
+    let request = match_app();
+    match request.subcommand() {
+        (subcommand, Some(_)) => {
+            log::error!("The '{}' subcommand is not yet implemented.", subcommand);
+        },
+        (_, None) => { // This can't happen with the current App specification.
+            panic!("No subcommand matched even though it's set as required!");
+        }
+    }
 }
 
 /// Provides the command-line app interface.
+/// 
 /// User's input will either be parsed into something
 /// that resembles a coherent request, or they will
 /// be presented with usage information and the process
 /// will exit.
 fn match_app<'a>() -> ArgMatches<'a> {
+    // Using the clap crate:
     App::new(env!("CARGO_PKG_NAME"))
         .version(env!("CARGO_PKG_VERSION"))
         .author(&authors(env!("CARGO_PKG_AUTHORS"))[..])

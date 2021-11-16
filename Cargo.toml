@@ -10,3 +10,9 @@ repository = "https://github.com/willburden/credential_truth"
 
 [dependencies]
 clap = "~2.33.3"
+log = "0.4.14"
+
+[dependencies.simple_logger]
+version = "~1.13.0"
+default-features = false
+features = ["colors", "stderr"]
