@@ -1,7 +1,7 @@
 # Credential_Truth
 ## (A.K.A. docker-credential-truth)
 
-*credential_truth* is a package that produces a program, `docker-credential-truth`
+*credential_truth* is a package that produces a program, *docker-credential-truth*
 which can act as a [Docker Credential Helper]. It is intended to be
 used only with Linux, as it depends on the [pass] command-line
 utility for storing secrets.
@@ -14,7 +14,7 @@ their program fails to access the right directories when run with `sudo`,
 which is often required when working with Docker. (It also *still* doesn't work
 even after you fix that...)
 
-*credential_truth* aims to fix this by establishing an unambiguous source
+credential_truth aims to fix this by establishing an unambiguous source
 of truth: secrets for each user are stored at
 `$CREDENTIAL_TRUTH/<user>/.password-store`, or
 `/var/docker-credential-truth/<user>/.password-store` if that variable isn't set.
