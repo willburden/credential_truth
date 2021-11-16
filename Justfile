@@ -1,3 +1,6 @@
+# cargo install just
+# More info: https://github.com/casey/just
+
 profile := "debug"
 # profile := "release"
 
