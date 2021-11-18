@@ -1,6 +1,6 @@
-//! ### A.K.A docker-credential-truth
+//! *A.K.A docker-credential-truth*
 //! 
-//! *credential_truth* is a package that compiles to a program, *docker-credential-truth*,
+//! credential_truth is a package that compiles to a program, docker-credential-truth,
 //! which can act as a Docker Credential Helper. To find out more about what
 //! this is, visit the [Github repo]. Health warning: it's not particularly interesting.
 //! 
@@ -9,27 +9,77 @@
 #![deny(clippy::missing_docs_in_private_items)]
 #![forbid(unsafe_code)]
 
+use std::env;
+
 use clap::{App, AppSettings, SubCommand, Arg, ArgMatches};
-use simple_logger::SimpleLogger;
 
 mod util;
-use util::authors;
+use util::*;
+
+mod logger;
+use logger::init_logger;
+
+mod error;
+use error::Error;
+
+mod init;
+use init::init;
 
 /// Entrypoint function, called whenever the program is run.
 /// 
 /// Reads the user's input, and outputs an appropriate response.
 pub fn run() {
-    // Safe to unwrap as init only errors if another logger is already set.
-    SimpleLogger::new().init().unwrap();
+    init_logger();
 
     let request = match_app();
     match request.subcommand() {
-        (subcommand, Some(_)) => {
-            log::error!("The '{}' subcommand is not yet implemented.", subcommand);
-        },
+        (subcommand, Some(request)) => {
+            // Since we've parsed a subcommand, we are now certain we will be using
+            // pass this run.
+            let pass = match find_pass() {
+                Some(pass) => pass,
+                None => {
+                    log::error!(
+"pass couldn't be found on your PATH.
+More info about pass here: https://www.passwordstore.org/"
+                    );
+                    return;
+                }
+            };
+            set_password_store_dir();
+
+            exec_subcommand(&pass, subcommand, request);
+        }
+
         (_, None) => { // This can't happen with the current App specification.
             panic!("No subcommand matched even though it's set as required!");
         }
+    }
+}
+
+/// Executes a subcommand.
+///
+/// Redirects the control flow to the correct module for the given
+/// subcommand, passing it any relevant args from the user's request.
+fn exec_subcommand(pass_path: &str, subcommand: &str, request: &ArgMatches) {
+    let result = match subcommand {
+        "init" => {
+            // Safe to unwrap as key-id is required.
+            // value_of panics at invalid UTF-8 code points. I'm not sure if that's
+            // something to worry about, so I'm gonna leave it as it is until it becomes
+            // an issue.
+            let key_id = request.value_of("key-id").unwrap();
+
+            init(pass_path, key_id)
+        }
+
+        subcommand => {
+            Err(Error(format!("The '{}' subcommand is not yet implemented.", subcommand)))
+        }
+    };
+
+    if let Err(Error(message)) = result {
+        log::error!("{}", message);
     }
 }
 
@@ -42,9 +92,10 @@ pub fn run() {
 fn match_app<'a>() -> ArgMatches<'a> {
     // Using the clap crate:
     App::new(env!("CARGO_PKG_NAME"))
-        .version(env!("CARGO_PKG_VERSION"))
         .author(&authors(env!("CARGO_PKG_AUTHORS"))[..])
         .about(env!("CARGO_PKG_DESCRIPTION"))
+        .version(env!("CARGO_PKG_VERSION"))
+        .setting(AppSettings::GlobalVersion)
         .after_help(
 "This program is intended as a substitute for docker-credential-pass.
 For more information, see https://github.com/willburden/docker-credential-truth"
