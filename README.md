@@ -9,15 +9,12 @@ utility for storing secrets.
 > Note: most of the functionality outlined below is not-yet-implemented.
 
 This program is intended as a replacement for the somewhat broken
-[docker-credential-pass] credential helper provided by Docker;
-their program fails to access the right directories when run with `sudo`,
-which is often required when working with Docker. (It also *still* doesn't work
-even after you fix that...)
+[docker-credential-pass] credential helper provided by Docker, which just
+doesn't seem to work.
 
-credential_truth aims to fix this by establishing an unambiguous source
-of truth: secrets for each user are stored at
-`$CREDENTIAL_TRUTH/$USER/`, or
-`/var/docker-credential-truth/$USER/` if that variable isn't set.
+credential_truth aims to be very unambiguous about where your secrets will be
+stored: at `$CREDENTIAL_TRUTH`, or `~/.docker-credential-truth/` if that variable
+isn't set.
 
 This is a separate store to your normal `pass` store, and in fact you can perfectly
 viably use pass in the normal way outside of your docker authentication needs
@@ -54,16 +51,7 @@ root@host:/home/user# docker-credential-truth init <GPG-Key-ID>
 ```
 
 This will initialise your password store at
-`$CREDENTIAL_TRUTH/<user>/.password-store`.
-
-It will also edit the file at `~/.docker/config.json` to inform Docker
-that you want it to use `docker-credential-truth`:
-
-```json
-{
-    "credsStore": "truth"
-}
-```
+`$CREDENTIAL_TRUTH` if it exists, or `~/.docker-credential-truth/` otherwise.
 
 You're now free to return to normal mode if you had been logged in as the 
 superuser:
@@ -72,6 +60,15 @@ superuser:
 root@host:/home/user# exit
 exit
 user@host:~$ 
+```
+
+And finally, you'll need to edit the file at `~/.docker/config.json` to inform Docker
+that you want it to use `docker-credential-truth`:
+
+```json
+{
+    "credsStore": "truth"
+}
 ```
 
 Now, when you login to Docker it should save your credentials properly,

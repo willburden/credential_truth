@@ -46,7 +46,6 @@ More info about pass here: https://www.passwordstore.org/"
                     return;
                 }
             };
-            set_password_store_dir();
 
             exec_subcommand(&pass, subcommand, request);
         }
@@ -97,35 +96,34 @@ fn match_app<'a>() -> ArgMatches<'a> {
         .version(env!("CARGO_PKG_VERSION"))
         .setting(AppSettings::GlobalVersion)
         .after_help(
-"This program is intended as a substitute for docker-credential-pass.
-For more information, see https://github.com/willburden/docker-credential-truth"
+"For more information, visit https://github.com/willburden/docker-credential-truth"
         )
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .subcommand(
             SubCommand::with_name("init")
-                .about("Initialises the credential helper for the current user.")
+                .about("Initialises the credential helper for the current user")
                 .arg(
                     Arg::with_name("key-id")
-                        .help("The ID of the GPG key to initialise your pass store with.")
+                        .help("The ID of the GPG key to initialise your pass store with")
                         .index(1)
                         .required(true)
                 )
         )
         .subcommand(
             SubCommand::with_name("store")
-                .about("Stores the credentials sent to stdin.")
+                .about("Stores the credentials sent to stdin")
         )
         .subcommand(
             SubCommand::with_name("get")
-                .about("Retrieves the credentials for the URL sent to stdin.")
+                .about("Retrieves the credentials for the URL sent to stdin")
         )
         .subcommand(
             SubCommand::with_name("list")
-                .about("Lists all stored credentials for the current user.")
+                .about("Lists all stored credentials for the current user")
         )
         .subcommand(
             SubCommand::with_name("erase")
-                .about("Deletes all credentials for the URL sent to stdin.")
+                .about("Deletes all credentials for the URL sent to stdin")
         )
         .get_matches()
 }

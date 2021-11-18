@@ -3,7 +3,7 @@ name = "credential_truth"
 version = "0.0.1"
 edition = "2021"
 authors = ["Will Burden"]
-description = "A Docker Credential Helper depending on pass."
+description = "A Docker Credential Helper that delegates to pass."
 repository = "https://github.com/willburden/credential_truth"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -12,5 +12,5 @@ repository = "https://github.com/willburden/credential_truth"
 clap = "2.33.3"
 log = "0.4.14"
 env_logger = "0.9.0"
-whoami = "1.2.0"
 which = "4.2.2"
+home = "0.5.3"
