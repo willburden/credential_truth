@@ -15,7 +15,7 @@ pub fn init(pass: &str, key: &str) -> Result<(), Error> {
 
     std::env::var("PASSWORD_STORE_DIR").unwrap();
 
-    log::info!("Initialising password store in {} with key {}", dir, key);
+    log::info!("Initialising password store in '{}' with key {}", dir, key);
 
     log::debug!("   run: {} init {}", pass, key);
 
