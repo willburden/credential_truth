@@ -145,8 +145,7 @@ pub fn get(pass: &str) -> Result<(), Error> {
         .output()?;
 
     log_command_output(&pass_output)?;
-    print!("{}", String::from_utf8_lossy(&pass_output.stdout[..]));
-
+    
     let secret = String::from_utf8(pass_output.stdout)
         .expect("Secret isn't valid utf-8!");
         
