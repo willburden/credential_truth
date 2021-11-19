@@ -90,7 +90,7 @@ fn exec_subcommand(pass_path: &str, subcommand: &str, request: &ArgMatches) {
 /// will exit.
 fn match_app<'a>() -> ArgMatches<'a> {
     // Using the clap crate:
-    App::new(env!("CARGO_PKG_NAME"))
+    App::new("docker-credential-truth")
         .author(&authors(env!("CARGO_PKG_AUTHORS"))[..])
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .version(env!("CARGO_PKG_VERSION"))
