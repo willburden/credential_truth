@@ -9,21 +9,19 @@
 #![deny(clippy::missing_docs_in_private_items)]
 #![forbid(unsafe_code)]
 
-use std::env;
-
-use clap::{App, AppSettings, SubCommand, Arg, ArgMatches};
-
 mod util;
-use util::*;
-
 mod logger;
-use logger::init_logger;
-
 mod error;
+mod subcommands;
+
+use util::*;
+use logger::init_logger;
 use error::Error;
 
-mod init;
-use init::init;
+use subcommands::{init, get, store};
+
+use clap::{App, AppSettings, SubCommand, Arg, ArgMatches};
+use std::env;
 
 /// Entrypoint function, called whenever the program is run.
 /// 
@@ -70,6 +68,14 @@ fn exec_subcommand(pass_path: &str, subcommand: &str, request: &ArgMatches) {
             let key_id = request.value_of("key-id").unwrap();
 
             init(pass_path, key_id)
+        }
+
+        "store" => {
+            store(pass_path)
+        }
+
+        "get" => {
+            get(pass_path)
         }
 
         subcommand => {

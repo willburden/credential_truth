@@ -23,3 +23,7 @@ doc open="":
     cargo doc {{_profile_flag}} \
         --lib --document-private-items --no-deps \
         {{ if open == "open" {"--open"} else {""} }}
+
+dock: build
+    cp target/{{profile}}/docker-credential-truth \
+        docker/piping-hot/

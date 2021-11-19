@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 echo -e "\e[1m=== run.sh ===\e[0m"
 
-# Install docker-credential-truth
 echo -e "\e[1mInstalling docker-credential-truth...\e[0m"
-wget -O - $INSTALL_SCRIPT | bash
+./install.sh
 
 key_id=$(cat key_id)
 
