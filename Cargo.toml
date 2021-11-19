@@ -1,6 +1,6 @@
 [package]
 name = "credential_truth"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 authors = ["Will Burden"]
 description = "A Docker Credential Helper that delegates to pass."
