@@ -12,7 +12,7 @@ WORKDIR /home/
 COPY /keys/ keys/
 COPY /scripts .
 RUN ["./setup.sh"]
-ENV INSTALL_SCRIPT='https://raw.githubusercontent.com/willburden/credential_truth/v0.1/install.sh'
+ENV INSTALL_SCRIPT='https://raw.githubusercontent.com/willburden/credential_truth/main/install.sh'
 
 # Run-time
 CMD ["./run.sh"]
