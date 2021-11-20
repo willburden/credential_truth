@@ -16,7 +16,7 @@ isn't set.
 
 This is a separate store to your normal `pass` store, and in fact you can perfectly
 viably use pass in the normal way outside of your docker authentication needs
-and it will never appear to interact or collide with *credential_truth*.
+and it will never appear to interact or collide with credential_truth.
 
 To help simplify things further, it also provides a utility for initialising
 this authentication system on a per-user basis.
