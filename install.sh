@@ -1,4 +1,4 @@
-echo -e "\e[1m~ install.sh ~\e[0m"
+echo -e "\e[1m~ docker-credential-truth ~\e[0m"
 echo "Downloading..."
 wget https://github.com/willburden/credential_truth/releases/latest/download/docker-credential-truth -O /tmp/docker-credential-truth 2> /dev/null
 echo "Installing..."
