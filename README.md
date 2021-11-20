@@ -6,11 +6,9 @@ which can act as a [Docker Credential Helper]. It is intended to be
 used only with Linux, as it depends on the [pass] command-line
 utility for storing secrets.
 
-> Note: most of the functionality outlined below is not-yet-implemented.
-
 This program is intended as a replacement for the somewhat broken
 [docker-credential-pass] credential helper provided by Docker, which just
-doesn't seem to work.
+doesn't seem to work in some cases.
 
 credential_truth aims to be very unambiguous about where your secrets will be
 stored: at `$CREDENTIAL_TRUTH`, or `~/.docker-credential-truth/` if that variable
