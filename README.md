@@ -29,11 +29,6 @@ To install, simply paste the following into the command-line:
 wget -q -O - https://raw.githubusercontent.com/willburden/credential_truth/main/install.sh | sudo bash
 ```
 
-Also, remember you can set the `CREDENTIAL_TRUTH` environment variable
-to change your secrets location. If you're going to do this, do it
-**before** you run `init`, and be aware that this will mean your
-secrets are no longer stored under the same structure as everyone else.
-
 ## Usage
 
 To get set up, first **make sure** you're logged in as the user you wish use
