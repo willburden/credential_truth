@@ -18,7 +18,7 @@ use util::*;
 use logger::init_logger;
 use error::Error;
 
-use subcommands::{init, get, store};
+use subcommands::{init, get, store, list};
 
 use clap::{App, AppSettings, SubCommand, Arg, ArgMatches};
 use std::env;
@@ -78,13 +78,24 @@ fn exec_subcommand(pass_path: &str, subcommand: &str, request: &ArgMatches) {
             get(pass_path)
         }
 
+        "list" => {
+            list()
+        }
+
         subcommand => {
-            Err(Error(format!("The '{}' subcommand is not yet implemented.", subcommand)))
+            Err(Error::Message(format!("The '{}' subcommand is not yet implemented.", subcommand)))
         }
     };
 
-    if let Err(Error(message)) = result {
-        log::error!("{}", message);
+    // if let Err(Error(message)) = result {
+    //     panic!("{}", message);
+    // }
+
+    if let Err(error) = result {
+        match error {
+            Error::Message(message) => log::error!("{}", message),
+            Error::FromError(error) => log::error!("{:?}", error)
+        }
     }
 }
 

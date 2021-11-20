@@ -1,11 +1,14 @@
 //! Implements the program's subcommands: *init*, *store*,
 //! *get*, *list*, and *erase*.
 
+use std::ffi::OsString;
+use std::os::unix::prelude::OsStrExt;
 use std::process::{Command, Output, Stdio};
 use std::io::stdin;
 use std::io::Write;
-use std::fs;
+use std::fs::{self, read_dir};
 use std::path::Path;
+use std::str::FromStr;
 
 use crate::error::Error;
 use crate::util::{set_password_store_dir, for_each_line};
@@ -58,14 +61,14 @@ pub fn store(pass: &str) -> Result<(), Error> {
 
     let mut auth: AuthDetails = serde_json::from_reader(stdin())?;
 
-    log::trace!("Received auth details:");
-    log::trace!("   ServerURL = {}", auth.ServerURL);
-    log::trace!("   Username  = {}", auth.Username);
-    log::trace!("   Secret    = <a secret>");
+    log::debug!("Received auth details:");
+    log::debug!("   ServerURL = {}", auth.ServerURL);
+    log::debug!("   Username  = {}", auth.Username);
+    log::debug!("   Secret    = <a secret>");
 
     auth.ServerURL = base64_url::encode(&auth.ServerURL);
 
-    log::trace!("Encoded URL = {}", auth.ServerURL);
+    log::debug!("Encoded URL = {}", auth.ServerURL);
     
     let pass_name = format!("{}/{}", auth.ServerURL, auth.Username);
     log::info!("Storing secret under {}", pass_name);
@@ -120,7 +123,7 @@ pub fn get(pass: &str) -> Result<(), Error> {
     let username = {
         match fs::read_dir(server_path)?.next() {
             Some(entry) => entry?.file_name(),
-            None => return Err(Error("No entry for the given server found.".to_string()))
+            None => return Err(Error::Message("No entry for the given server found.".to_string()))
         }
     };
 
@@ -165,9 +168,53 @@ pub fn get(pass: &str) -> Result<(), Error> {
 
 /// Lists all the stored credentials.
 /// 
-/// 
+/// Returns a JSON object that maps
+/// server URLS to usernames.
 pub fn list() -> Result<(), Error> {
-    todo!()
+    use serde_json::Map;
+
+    let dir = set_password_store_dir();
+    let mut map = Map::new();
+
+    for entry in fs::read_dir(dir)?.flatten() {
+        let server_url = entry.file_name();
+
+        if server_url == OsString::from_str(".gpg-id").unwrap() {
+            log::trace!("Skipping .gpg-id");
+            continue;
+        }
+
+        let server_url = base64_url::decode(server_url.as_bytes()).unwrap();
+
+        log::debug!("Found server: '{}'.", String::from_utf8_lossy(&server_url[..]));
+        
+        let username = match read_dir(entry.path())?.flatten().next() {
+            Some(child_entry) => child_entry.file_name(),
+            None => {
+                log::debug!("Found no usernames for server.");
+                continue;
+            }
+        };
+
+        let username = if let Some(username) = username.to_str() {
+            username.trim_end_matches(".gpg")
+        } else {
+            return Err(Error::Message(String::from("Username not valid unicode!")));
+        };
+
+        log::debug!("   Found username: '{}'.", username);
+
+        map.insert(
+            String::from_utf8(server_url).expect("Invalid utf-8 in server URL!"), 
+            serde_json::Value::String(username.to_string())
+        );
+    }
+
+    let json_object = serde_json::value::Value::Object(map);
+
+    println!("{}", json_object);
+
+    Ok(())
 }
 
 /// Pretty-logs the Output of a Command.

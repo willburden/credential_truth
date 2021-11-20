@@ -9,21 +9,28 @@ use std::fmt::{Display, Formatter};
 /// 
 /// It's just a container for a String. Implements From for
 /// any other errors that it's convenient to implicitly convert.
+#[allow(clippy::missing_docs_in_private_items)]
 #[derive(Debug)]
-pub struct Error(
-    /// The error message.
-    pub String
-);
+pub enum Error {
+    Message(String),
+    FromError(Box<dyn error::Error>)
+}
 
 impl Display for Error {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.0)
+        match self {
+            Error::Message(message) => {
+                write!(f, "{}", message)
+            }
+            Error::FromError(e) => {
+                write!(f, "{}", e)
+            }
+        }
     }
 }
 
-impl<E> From<E> for Error
-where E: error::Error {
+impl<E: error::Error + 'static> From<E> for Error {
     fn from(e: E) -> Self {
-        Self(e.to_string())
+        Self::FromError(Box::new(e))
     }
 }
