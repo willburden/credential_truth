@@ -12,11 +12,11 @@ help:
 
 build:
     cargo build {{_profile_flag}}
-    mv target/{{profile}}/credential_truth target/{{profile}}/docker-credential-truth
+    install -v target/{{profile}}/credential_truth target/{{profile}}/docker-credential-truth
     chmod +x target/{{profile}}/docker-credential-truth
 
 install: build
-    sudo cp target/{{profile}}/docker-credential-truth \
+    sudo install -v target/{{profile}}/docker-credential-truth \
         /usr/bin/
 
 doc open="":
