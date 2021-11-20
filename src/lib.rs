@@ -18,8 +18,6 @@ use util::*;
 use logger::init_logger;
 use error::Error;
 
-use subcommands::{init, get, store, list};
-
 use clap::{App, AppSettings, SubCommand, Arg, ArgMatches};
 use std::env;
 
@@ -59,6 +57,8 @@ More info about pass here: https://www.passwordstore.org/"
 /// Redirects the control flow to the correct module for the given
 /// subcommand, passing it any relevant args from the user's request.
 fn exec_subcommand(pass_path: &str, subcommand: &str, request: &ArgMatches) {
+    use subcommands::{init, get, store, list, erase};
+
     let result = match subcommand {
         "init" => {
             // Safe to unwrap as key-id is required.
@@ -70,17 +70,13 @@ fn exec_subcommand(pass_path: &str, subcommand: &str, request: &ArgMatches) {
             init(pass_path, key_id)
         }
 
-        "store" => {
-            store(pass_path)
-        }
+        "store" => store(pass_path),
 
-        "get" => {
-            get(pass_path)
-        }
+        "get" => get(pass_path),
 
-        "list" => {
-            list()
-        }
+        "list" => list(),
+
+        "erase" => erase(),
 
         subcommand => {
             Err(Error::Message(format!("The '{}' subcommand is not yet implemented.", subcommand)))

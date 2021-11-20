@@ -217,6 +217,31 @@ pub fn list() -> Result<(), Error> {
     Ok(())
 }
 
+/// Erases the credentials for a given server.
+///
+/// The server URL is provided through stdin.
+pub fn erase() -> Result<(), Error> {
+    let dir = set_password_store_dir();
+
+    log::info!("Enter the server url:");
+    let server_url = {
+        let mut buf = String::new();
+        stdin().read_line(&mut buf)?;
+        buf
+    };
+
+    let server_url = base64_url::encode(&server_url.trim_end());
+    let server_path = Path::new(&dir).join(Path::new(&server_url));
+
+    log::debug!("Erasing directory '{}'", server_path.to_string_lossy());
+
+    fs::remove_dir_all(server_path)?;
+
+    log::info!("Successfully erased server credentials.");
+
+    Ok(())
+}
+
 /// Pretty-logs the Output of a Command.
 fn log_command_output(output: &Output) -> Result<(), std::io::Error> {
     let outputs = [
