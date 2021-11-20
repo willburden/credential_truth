@@ -1,2 +1,2 @@
 # Install docker-credential-truth
-wget -O - $INSTALL_SCRIPT | bash
+wget -q -O - $INSTALL_SCRIPT | bash

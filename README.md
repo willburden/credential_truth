@@ -25,9 +25,11 @@ this authentication system on a per-user basis.
 
 ## Installation
 
-After compilation, the resultant binary should be renamed to
-`docker-credential-truth` and added to the path. This is so Docker accepts it
-as a credential helper.
+To install, simply paste the following into the command-line:
+
+```console
+wget -q -O - https://raw.githubusercontent.com/willburden/credential_truth/main/install.sh | sudo bash
+```
 
 Also, remember you can set the `CREDENTIAL_TRUTH` environment variable
 to change your secrets location. If you're going to do this, do it
